@@ -2,6 +2,8 @@ package jp.s2jdbc.extension.dialect;
 
 import javax.persistence.TemporalType;
 
+import jp.s2jdbc.extension.types.DateTimeSqlDateType;
+import jp.s2jdbc.extension.types.DateTimeTimeType;
 import jp.s2jdbc.extension.types.DateTimeTimestampType;
 
 import org.joda.time.DateTime;
@@ -17,6 +19,8 @@ import org.seasar.extension.jdbc.dialect.PostgreDialect;
  */
 public class ExtensionPostgreDialect extends PostgreDialect {
 	public static final ValueType DATETIME_TIMESTAMP = new DateTimeTimestampType();
+	public static final ValueType DATETIME_SQLDATE = new DateTimeSqlDateType();
+	public static final ValueType DATETIME_TIME = new DateTimeTimeType();
 
 	@Override
 	public ValueType getValueType(PropertyMeta propertyMeta) {
@@ -26,6 +30,10 @@ public class ExtensionPostgreDialect extends PostgreDialect {
 			switch (propertyMeta.getTemporalType()) {
 			case TIMESTAMP:
 				return DATETIME_TIMESTAMP;
+			case DATE:
+				return DATETIME_SQLDATE;
+			case TIME:
+				return DATETIME_TIME;
 			default:
 				break;
 			}
@@ -40,6 +48,10 @@ public class ExtensionPostgreDialect extends PostgreDialect {
 			switch (temporalType) {
 			case TIMESTAMP:
 				return DATETIME_TIMESTAMP;
+			case DATE:
+				return DATETIME_SQLDATE;
+			case TIME:
+				return DATETIME_TIME;
 			default:
 				break;
 			}
