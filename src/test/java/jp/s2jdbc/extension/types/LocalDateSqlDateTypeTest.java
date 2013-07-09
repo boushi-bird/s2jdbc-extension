@@ -19,7 +19,7 @@ import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 
 @RunWith(Seasar2.class)
-public class DateTimeSqlDateTypeTest {
+public class LocalDateSqlDateTypeTest {
 	@EasyMock(value = EasyMockType.DEFAULT)
 	private ResultSet resultSet;
 	@EasyMock(value = EasyMockType.DEFAULT)
@@ -27,10 +27,10 @@ public class DateTimeSqlDateTypeTest {
 	@EasyMock(value = EasyMockType.DEFAULT)
 	private PreparedStatement preparedStatement;
 
-	private LocalDateSqlDateType dateTimeSqlDateType = new LocalDateSqlDateType();
+	private LocalDateSqlDateType localDateSqlDateType = new LocalDateSqlDateType();
 
 	private LocalDate[] expectDates = new LocalDate[] {
-			// toSqlDateTime(0),
+			// toSqlDate(0),
 			// 2010/01/01 UTC
 			new LocalDate(2010, 1, 1,
 					ISOChronology.getInstance(DateTimeZone.UTC)),
@@ -56,24 +56,22 @@ public class DateTimeSqlDateTypeTest {
 		expect(resultSet.getDate(0)).andReturn(toSqlDate(0));
 		expect(resultSet.getDate("test")).andReturn(toSqlDate(0));
 		for (LocalDate expectDate : expectDates) {
-			expect(resultSet.getDate(0)).andReturn(
-					toSqlDate(expectDate.toDate()));
-			expect(resultSet.getDate("test")).andReturn(
-					toSqlDate(expectDate.toDate()));
+			expect(resultSet.getDate(0)).andReturn(toSqlDate(expectDate));
+			expect(resultSet.getDate("test")).andReturn(toSqlDate(expectDate));
 		}
 	}
 
 	@Test
 	public void getValueResultSet() throws Exception {
 		assertGetValue(new LocalDate(0L),
-				dateTimeSqlDateType.getValue(resultSet, 0));
+				localDateSqlDateType.getValue(resultSet, 0));
 		assertGetValue(new LocalDate(0L),
-				dateTimeSqlDateType.getValue(resultSet, "test"));
+				localDateSqlDateType.getValue(resultSet, "test"));
 		for (LocalDate expectDate : expectDates) {
 			assertGetValue(expectDate,
-					dateTimeSqlDateType.getValue(resultSet, 0));
+					localDateSqlDateType.getValue(resultSet, 0));
 			assertGetValue(expectDate,
-					dateTimeSqlDateType.getValue(resultSet, "test"));
+					localDateSqlDateType.getValue(resultSet, "test"));
 		}
 	}
 
@@ -82,23 +80,23 @@ public class DateTimeSqlDateTypeTest {
 		expect(callableStatement.getDate("test")).andReturn(toSqlDate(0));
 		for (LocalDate expectDate : expectDates) {
 			expect(callableStatement.getDate(0)).andReturn(
-					toSqlDate(expectDate.toDate()));
+					toSqlDate(expectDate));
 			expect(callableStatement.getDate("test")).andReturn(
-					toSqlDate(expectDate.toDate()));
+					toSqlDate(expectDate));
 		}
 	}
 
 	@Test
 	public void getValueCallableStatement() throws Exception {
 		assertGetValue(new LocalDate(0L),
-				dateTimeSqlDateType.getValue(callableStatement, 0));
+				localDateSqlDateType.getValue(callableStatement, 0));
 		assertGetValue(new LocalDate(0L),
-				dateTimeSqlDateType.getValue(callableStatement, "test"));
+				localDateSqlDateType.getValue(callableStatement, "test"));
 		for (LocalDate expectDate : expectDates) {
 			assertGetValue(expectDate,
-					dateTimeSqlDateType.getValue(callableStatement, 0));
+					localDateSqlDateType.getValue(callableStatement, 0));
 			assertGetValue(expectDate,
-					dateTimeSqlDateType.getValue(callableStatement, "test"));
+					localDateSqlDateType.getValue(callableStatement, "test"));
 		}
 	}
 
@@ -106,16 +104,16 @@ public class DateTimeSqlDateTypeTest {
 		preparedStatement.setDate(0, toSqlDate(0L));
 		expectLastCall();
 		for (LocalDate expectDate : expectDates) {
-			preparedStatement.setDate(0, toSqlDate(expectDate.toDate()));
+			preparedStatement.setDate(0, toSqlDate(expectDate));
 			expectLastCall();
 		}
 	}
 
 	@Test
 	public void bindValuePreparedStatement() throws Exception {
-		dateTimeSqlDateType.bindValue(preparedStatement, 0, new LocalDate(0L));
+		localDateSqlDateType.bindValue(preparedStatement, 0, new LocalDate(0L));
 		for (LocalDate expectDate : expectDates) {
-			dateTimeSqlDateType.bindValue(preparedStatement, 0, expectDate);
+			localDateSqlDateType.bindValue(preparedStatement, 0, expectDate);
 		}
 	}
 
@@ -123,24 +121,28 @@ public class DateTimeSqlDateTypeTest {
 		callableStatement.setDate("test", toSqlDate(0L));
 		expectLastCall();
 		for (LocalDate expectDate : expectDates) {
-			callableStatement.setDate("test", toSqlDate(expectDate.toDate()));
+			callableStatement.setDate("test", toSqlDate(expectDate));
 			expectLastCall();
 		}
 	}
 
 	@Test
 	public void bindValueCallableStatement() throws Exception {
-		dateTimeSqlDateType.bindValue(callableStatement, "test", new LocalDate(
-				0));
+		localDateSqlDateType.bindValue(callableStatement, "test",
+				new LocalDate(0));
 		for (LocalDate expectDate : expectDates) {
-			dateTimeSqlDateType
-					.bindValue(callableStatement, "test", expectDate);
+			localDateSqlDateType.bindValue(callableStatement, "test",
+					expectDate);
 		}
 	}
 
 	private void assertGetValue(LocalDate expected, Object actual) {
 		assertThat(actual, instanceOf(LocalDate.class));
 		assertThat(((LocalDate) actual), is(expected));
+	}
+
+	protected java.sql.Date toSqlDate(LocalDate localDate) {
+		return toSqlDate(localDate.toDate());
 	}
 
 	protected java.sql.Date toSqlDate(long time) {
