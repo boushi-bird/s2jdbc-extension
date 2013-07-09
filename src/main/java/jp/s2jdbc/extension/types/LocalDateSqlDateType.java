@@ -72,6 +72,7 @@ public class LocalDateSqlDateType extends DateSqlDateType {
 			return null;
 		}
 		// LocalDate -> java.util.Dateの変換
-		return localDate.toDate();
+		java.util.Date d = localDate.toDate();
+		return d;
 	}
 }

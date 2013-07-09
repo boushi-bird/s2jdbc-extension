@@ -5,11 +5,10 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.sql.CallableStatement;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Calendar;
 
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.chrono.ISOChronology;
@@ -31,7 +30,7 @@ public class DateTimeSqlDateTypeTest {
 	private LocalDateSqlDateType dateTimeSqlDateType = new LocalDateSqlDateType();
 
 	private LocalDate[] expectDates = new LocalDate[] {
-			// new DateTime(0),
+			// toSqlDateTime(0),
 			// 2010/01/01 UTC
 			new LocalDate(2010, 1, 1,
 					ISOChronology.getInstance(DateTimeZone.UTC)),
@@ -54,13 +53,13 @@ public class DateTimeSqlDateTypeTest {
 	};
 
 	public void recordGetValueResultSet() throws Exception {
-		expect(resultSet.getDate(0)).andReturn(new Date(0));
-		expect(resultSet.getDate("test")).andReturn(new Date(0));
+		expect(resultSet.getDate(0)).andReturn(toSqlDate(0));
+		expect(resultSet.getDate("test")).andReturn(toSqlDate(0));
 		for (LocalDate expectDate : expectDates) {
 			expect(resultSet.getDate(0)).andReturn(
-					new Date(expectDate.toDate().getTime()));
+					toSqlDate(expectDate.toDate()));
 			expect(resultSet.getDate("test")).andReturn(
-					new Date(expectDate.toDate().getTime()));
+					toSqlDate(expectDate.toDate()));
 		}
 	}
 
@@ -79,13 +78,13 @@ public class DateTimeSqlDateTypeTest {
 	}
 
 	public void recordGetValueCallableStatement() throws Exception {
-		expect(callableStatement.getDate(0)).andReturn(new Date(0));
-		expect(callableStatement.getDate("test")).andReturn(new Date(0));
+		expect(callableStatement.getDate(0)).andReturn(toSqlDate(0));
+		expect(callableStatement.getDate("test")).andReturn(toSqlDate(0));
 		for (LocalDate expectDate : expectDates) {
 			expect(callableStatement.getDate(0)).andReturn(
-					new Date(expectDate.toDate().getTime()));
+					toSqlDate(expectDate.toDate()));
 			expect(callableStatement.getDate("test")).andReturn(
-					new Date(expectDate.toDate().getTime()));
+					toSqlDate(expectDate.toDate()));
 		}
 	}
 
@@ -104,29 +103,27 @@ public class DateTimeSqlDateTypeTest {
 	}
 
 	public void recordBindValuePreparedStatement() throws Exception {
-		preparedStatement.setDate(0, new Date(0L));
+		preparedStatement.setDate(0, toSqlDate(0L));
 		expectLastCall();
 		for (LocalDate expectDate : expectDates) {
-			preparedStatement.setDate(0,
-					new Date(expectDate.toDate().getTime()));
+			preparedStatement.setDate(0, toSqlDate(expectDate.toDate()));
 			expectLastCall();
 		}
 	}
 
 	@Test
 	public void bindValuePreparedStatement() throws Exception {
-		dateTimeSqlDateType.bindValue(preparedStatement, 0, new DateTime(0L));
+		dateTimeSqlDateType.bindValue(preparedStatement, 0, new LocalDate(0L));
 		for (LocalDate expectDate : expectDates) {
 			dateTimeSqlDateType.bindValue(preparedStatement, 0, expectDate);
 		}
 	}
 
 	public void recordBindValueCallableStatement() throws Exception {
-		callableStatement.setDate("test", new Date(0L));
+		callableStatement.setDate("test", toSqlDate(0L));
 		expectLastCall();
 		for (LocalDate expectDate : expectDates) {
-			callableStatement.setDate("test", new Date(expectDate.toDate()
-					.getTime()));
+			callableStatement.setDate("test", toSqlDate(expectDate.toDate()));
 			expectLastCall();
 		}
 	}
@@ -134,7 +131,7 @@ public class DateTimeSqlDateTypeTest {
 	@Test
 	public void bindValueCallableStatement() throws Exception {
 		dateTimeSqlDateType.bindValue(callableStatement, "test", new LocalDate(
-				0L));
+				0));
 		for (LocalDate expectDate : expectDates) {
 			dateTimeSqlDateType
 					.bindValue(callableStatement, "test", expectDate);
@@ -146,4 +143,17 @@ public class DateTimeSqlDateTypeTest {
 		assertThat(((LocalDate) actual), is(expected));
 	}
 
+	protected java.sql.Date toSqlDate(long time) {
+		return toSqlDate(new java.util.Date(time));
+	}
+
+	protected java.sql.Date toSqlDate(java.util.Date date) {
+		Calendar base = Calendar.getInstance();
+		base.setTime(date);
+		base.set(Calendar.HOUR_OF_DAY, 0);
+		base.set(Calendar.MINUTE, 0);
+		base.set(Calendar.SECOND, 0);
+		base.set(Calendar.MILLISECOND, 0);
+		return new java.sql.Date(base.getTimeInMillis());
+	}
 }
