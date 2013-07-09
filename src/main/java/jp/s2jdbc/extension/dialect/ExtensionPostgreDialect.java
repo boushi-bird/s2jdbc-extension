@@ -2,9 +2,9 @@ package jp.s2jdbc.extension.dialect;
 
 import javax.persistence.TemporalType;
 
-import jp.s2jdbc.extension.types.DateTimeSqlDateType;
 import jp.s2jdbc.extension.types.DateTimeTimeType;
 import jp.s2jdbc.extension.types.DateTimeTimestampType;
+import jp.s2jdbc.extension.types.LocalDateSqlDateType;
 
 import org.joda.time.DateTime;
 import org.seasar.extension.jdbc.PropertyMeta;
@@ -19,7 +19,7 @@ import org.seasar.extension.jdbc.dialect.PostgreDialect;
  */
 public class ExtensionPostgreDialect extends PostgreDialect {
 	public static final ValueType DATETIME_TIMESTAMP = new DateTimeTimestampType();
-	public static final ValueType DATETIME_SQLDATE = new DateTimeSqlDateType();
+	public static final ValueType DATETIME_SQLDATE = new LocalDateSqlDateType();
 	public static final ValueType DATETIME_TIME = new DateTimeTimeType();
 
 	@Override

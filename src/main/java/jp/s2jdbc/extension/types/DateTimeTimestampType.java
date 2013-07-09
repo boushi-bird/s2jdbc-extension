@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import org.joda.time.DateTime;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.DateTimestampType;
 
 /**

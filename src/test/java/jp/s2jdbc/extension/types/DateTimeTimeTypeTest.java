@@ -5,7 +5,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 
@@ -18,15 +17,13 @@ import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 
 @RunWith(Seasar2.class)
-public class DateTimeTimestampTypeTest {
+public class DateTimeTimeTypeTest {
 	@EasyMock(value = EasyMockType.DEFAULT)
 	private ResultSet resultSet;
 	@EasyMock(value = EasyMockType.DEFAULT)
 	private CallableStatement callableStatement;
-	@EasyMock(value = EasyMockType.DEFAULT)
-	private PreparedStatement preparedStatement;
 
-	private final DateTimeTimestampType dateTimeTimestampType = new DateTimeTimestampType();
+	private DateTimeTimeType dateTimeTimeType = new DateTimeTimeType();
 
 	private DateTime[] expectDateTimes = new DateTime[] {
 			// new DateTime(0),
@@ -62,14 +59,14 @@ public class DateTimeTimestampTypeTest {
 	@Test
 	public void getValueResultSet() throws Exception {
 		assertGetValue(new DateTime(0L),
-				dateTimeTimestampType.getValue(resultSet, 0));
+				dateTimeTimeType.getValue(resultSet, 0));
 		assertGetValue(new DateTime(0L),
-				dateTimeTimestampType.getValue(resultSet, "test"));
+				dateTimeTimeType.getValue(resultSet, "test"));
 		for (DateTime expectDateTime : expectDateTimes) {
 			assertGetValue(expectDateTime,
-					dateTimeTimestampType.getValue(resultSet, 0));
+					dateTimeTimeType.getValue(resultSet, 0));
 			assertGetValue(expectDateTime,
-					dateTimeTimestampType.getValue(resultSet, "test"));
+					dateTimeTimeType.getValue(resultSet, "test"));
 		}
 	}
 
@@ -88,53 +85,14 @@ public class DateTimeTimestampTypeTest {
 	@Test
 	public void getValueCallableStatement() throws Exception {
 		assertGetValue(new DateTime(0L),
-				dateTimeTimestampType.getValue(callableStatement, 0));
+				dateTimeTimeType.getValue(callableStatement, 0));
 		assertGetValue(new DateTime(0L),
-				dateTimeTimestampType.getValue(callableStatement, "test"));
+				dateTimeTimeType.getValue(callableStatement, "test"));
 		for (DateTime expectDateTime : expectDateTimes) {
 			assertGetValue(expectDateTime,
-					dateTimeTimestampType.getValue(callableStatement, 0));
+					dateTimeTimeType.getValue(callableStatement, 0));
 			assertGetValue(expectDateTime,
-					dateTimeTimestampType.getValue(callableStatement, "test"));
-		}
-	}
-
-	public void recordBindValuePreparedStatement() throws Exception {
-		preparedStatement.setTimestamp(0, new Timestamp(0L));
-		expectLastCall();
-		for (DateTime expectDateTime : expectDateTimes) {
-			preparedStatement.setTimestamp(0,
-					new Timestamp(expectDateTime.getMillis()));
-			expectLastCall();
-		}
-	}
-
-	@Test
-	public void bindValuePreparedStatement() throws Exception {
-		dateTimeTimestampType.bindValue(preparedStatement, 0, new DateTime(0L));
-		for (DateTime expectDateTime : expectDateTimes) {
-			dateTimeTimestampType.bindValue(preparedStatement, 0,
-					expectDateTime);
-		}
-	}
-
-	public void recordBindValueCallableStatement() throws Exception {
-		callableStatement.setTimestamp("test", new Timestamp(0L));
-		expectLastCall();
-		for (DateTime expectDateTime : expectDateTimes) {
-			callableStatement.setTimestamp("test",
-					new Timestamp(expectDateTime.getMillis()));
-			expectLastCall();
-		}
-	}
-
-	@Test
-	public void bindValueCallableStatement() throws Exception {
-		dateTimeTimestampType.bindValue(callableStatement, "test",
-				new DateTime(0L));
-		for (DateTime expectDateTime : expectDateTimes) {
-			dateTimeTimestampType.bindValue(callableStatement, "test",
-					expectDateTime);
+					dateTimeTimeType.getValue(callableStatement, "test"));
 		}
 	}
 
@@ -143,4 +101,5 @@ public class DateTimeTimestampTypeTest {
 		assertThat(((DateTime) actual).toDateTime(DateTimeZone.UTC),
 				is(expected.toDateTime(DateTimeZone.UTC)));
 	}
+
 }

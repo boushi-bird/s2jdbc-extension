@@ -4,17 +4,17 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.DateSqlDateType;
 
 /**
- * {@link java.sql.Date}と互換性をもつ{@link DateTime}用の{@link ValueType}です。
+ * {@link java.sql.Date}と互換性をもつ{@link LocalDate}用の{@link ValueType}です。
  * 
  * @author boushi
  * 
  */
-public class DateTimeSqlDateType extends DateSqlDateType {
+public class LocalDateSqlDateType extends DateSqlDateType {
 	@Override
 	public Object getValue(ResultSet resultSet, int index) throws SQLException {
 		return toDateTimeFromSqlDate(resultSet.getDate(index));
@@ -39,39 +39,39 @@ public class DateTimeSqlDateType extends DateSqlDateType {
 
 	@Override
 	protected java.util.Date toDate(Object value) {
-		if (value instanceof DateTime) {
-			return toSqlDateFromDateTime((DateTime) value);
+		if (value instanceof LocalDate) {
+			return toDateFromDateTime((LocalDate) value);
 		}
 		return super.toDate(value);
 	}
 
 	/**
-	 * {@link java.sql.Date}から{@link DateTime}を取得する.
+	 * {@link java.sql.Date}から{@link LocalDate}を取得する.
 	 * 
 	 * @param date
 	 *            {@link java.sql.Date}の値
-	 * @return {@link DateTime}の値
+	 * @return {@link LocalDate}の値
 	 */
-	private DateTime toDateTimeFromSqlDate(java.sql.Date date) {
+	protected LocalDate toDateTimeFromSqlDate(java.sql.Date date) {
 		if (date == null) {
 			return null;
 		}
-		// FIXME java.sql.Date -> DateTimeの変換
-		return null;
+		// java.sql.Date -> LocalDateの変換
+		return new LocalDate(date.getTime());
 	}
 
 	/**
-	 * {@link DateTime}から{@link java.sql.Date}を取得する.
+	 * {@link LocalDate}から{@link java.sql.Date}を取得する.
 	 * 
 	 * @param dateTime
-	 *            {@link DateTime}の値
+	 *            {@link LocalDate}の値
 	 * @return {@link java.sql.Date}の値
 	 */
-	private java.sql.Date toSqlDateFromDateTime(DateTime dateTime) {
-		if (dateTime == null) {
+	protected java.util.Date toDateFromDateTime(LocalDate localDate) {
+		if (localDate == null) {
 			return null;
 		}
-		// FIXME DateTime -> java.sql.Dateの変換
-		return null;
+		// LocalDate -> java.util.Dateの変換
+		return localDate.toDate();
 	}
 }
