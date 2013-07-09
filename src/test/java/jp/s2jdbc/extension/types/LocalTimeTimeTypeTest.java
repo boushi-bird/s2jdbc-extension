@@ -10,9 +10,7 @@ import java.sql.ResultSet;
 import java.sql.Time;
 import java.util.Calendar;
 
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
-import org.joda.time.chrono.ISOChronology;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.framework.unit.Seasar2;
@@ -31,25 +29,16 @@ public class LocalTimeTimeTypeTest {
 	private LocalTimeTimeType localTimeTimeType = new LocalTimeTimeType();
 
 	private LocalTime[] expectTimes = new LocalTime[] {
-			// new DateTime(0),
-			// 01:30:00 UTC
-			new LocalTime(1, 30, 0, 0,
-					ISOChronology.getInstance(DateTimeZone.UTC)),
-			// 12:00:00 UTC
-			new LocalTime(12, 0, 0, 0,
-					ISOChronology.getInstance(DateTimeZone.UTC)),
-			// 01:00:00 JST
-			new LocalTime(1, 30, 0, 0, ISOChronology.getInstance(DateTimeZone
-					.forID("Asia/Tokyo"))),
-			// 12:00:00 JST
-			new LocalTime(12, 0, 0, 0, ISOChronology.getInstance(DateTimeZone
-					.forID("Asia/Tokyo"))),
-			// 07:07:07.777 UTC
-			new LocalTime(7, 7, 7, 777,
-					ISOChronology.getInstance(DateTimeZone.UTC)),
-			// 07:07:07.777 JST
-			new LocalTime(7, 7, 7, 777, ISOChronology.getInstance(DateTimeZone
-					.forID("Asia/Tokyo"))),
+			// 00:00:00.000
+			new LocalTime(0, 0, 0, 0),
+			// 01:30:00.000
+			new LocalTime(1, 30, 0, 0),
+			// 07:07:07.777
+			new LocalTime(7, 7, 7, 777),
+			// 12:00:00.000
+			new LocalTime(12, 0, 0, 0),
+			// 23:59:59.999
+			new LocalTime(23, 59, 59, 999),
 	//
 	};
 

@@ -9,9 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
-import org.joda.time.chrono.ISOChronology;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.framework.unit.Seasar2;
@@ -30,34 +28,29 @@ public class LocalDateSqlDateTypeTest {
 	private LocalDateSqlDateType localDateSqlDateType = new LocalDateSqlDateType();
 
 	private LocalDate[] expectDates = new LocalDate[] {
-			// toSqlDate(0),
-			// 2010/01/01 UTC
-			new LocalDate(2010, 1, 1,
-					ISOChronology.getInstance(DateTimeZone.UTC)),
-			// 2020/01/01 UTC
-			new LocalDate(2020, 1, 1,
-					ISOChronology.getInstance(DateTimeZone.UTC)),
-			// 2010/01/01 JST
-			new LocalDate(2010, 1, 1, ISOChronology.getInstance(DateTimeZone
-					.forID("Asia/Tokyo"))),
-			// 2020/01/01 JST
-			new LocalDate(2020, 1, 1, ISOChronology.getInstance(DateTimeZone
-					.forID("Asia/Tokyo"))),
-			// 2007/07/07 UTC
-			new LocalDate(2007, 7, 7,
-					ISOChronology.getInstance(DateTimeZone.UTC)),
-			// 2007/07/07 JST
-			new LocalDate(2007, 7, 7, ISOChronology.getInstance(DateTimeZone
-					.forID("Asia/Tokyo"))),
+			// 2012/01/01
+			new LocalDate(2012, 1, 1),
+			// 2012/02/28
+			new LocalDate(2012, 2, 28),
+			// 2012/02/29
+			new LocalDate(2012, 2, 29),
+			// 2012/03/01
+			new LocalDate(2012, 3, 1),
+			// 2012/12/31
+			new LocalDate(2012, 12, 31),
 	//
 	};
 
 	public void recordGetValueResultSet() throws Exception {
-		expect(resultSet.getDate(0)).andReturn(toSqlDate(0));
-		expect(resultSet.getDate("test")).andReturn(toSqlDate(0));
+		expect(resultSet.getDate(0)).andReturn(
+				toSqlDate(new java.util.Date(0L)));
+		expect(resultSet.getDate("test")).andReturn(
+				toSqlDate(new java.util.Date(0L)));
 		for (LocalDate expectDate : expectDates) {
-			expect(resultSet.getDate(0)).andReturn(toSqlDate(expectDate));
-			expect(resultSet.getDate("test")).andReturn(toSqlDate(expectDate));
+			expect(resultSet.getDate(0)).andReturn(
+					toSqlDate(expectDate.toDate()));
+			expect(resultSet.getDate("test")).andReturn(
+					toSqlDate(expectDate.toDate()));
 		}
 	}
 
@@ -76,13 +69,15 @@ public class LocalDateSqlDateTypeTest {
 	}
 
 	public void recordGetValueCallableStatement() throws Exception {
-		expect(callableStatement.getDate(0)).andReturn(toSqlDate(0));
-		expect(callableStatement.getDate("test")).andReturn(toSqlDate(0));
+		expect(callableStatement.getDate(0)).andReturn(
+				toSqlDate(new java.util.Date(0L)));
+		expect(callableStatement.getDate("test")).andReturn(
+				toSqlDate(new java.util.Date(0L)));
 		for (LocalDate expectDate : expectDates) {
 			expect(callableStatement.getDate(0)).andReturn(
-					toSqlDate(expectDate));
+					toSqlDate(expectDate.toDate()));
 			expect(callableStatement.getDate("test")).andReturn(
-					toSqlDate(expectDate));
+					toSqlDate(expectDate.toDate()));
 		}
 	}
 
@@ -101,10 +96,10 @@ public class LocalDateSqlDateTypeTest {
 	}
 
 	public void recordBindValuePreparedStatement() throws Exception {
-		preparedStatement.setDate(0, toSqlDate(0L));
+		preparedStatement.setDate(0, toSqlDate(new java.util.Date(0L)));
 		expectLastCall();
 		for (LocalDate expectDate : expectDates) {
-			preparedStatement.setDate(0, toSqlDate(expectDate));
+			preparedStatement.setDate(0, toSqlDate(expectDate.toDate()));
 			expectLastCall();
 		}
 	}
@@ -118,10 +113,10 @@ public class LocalDateSqlDateTypeTest {
 	}
 
 	public void recordBindValueCallableStatement() throws Exception {
-		callableStatement.setDate("test", toSqlDate(0L));
+		callableStatement.setDate("test", toSqlDate(new java.util.Date(0L)));
 		expectLastCall();
 		for (LocalDate expectDate : expectDates) {
-			callableStatement.setDate("test", toSqlDate(expectDate));
+			callableStatement.setDate("test", toSqlDate(expectDate.toDate()));
 			expectLastCall();
 		}
 	}
@@ -139,14 +134,6 @@ public class LocalDateSqlDateTypeTest {
 	private void assertGetValue(LocalDate expected, Object actual) {
 		assertThat(actual, instanceOf(LocalDate.class));
 		assertThat(((LocalDate) actual), is(expected));
-	}
-
-	protected java.sql.Date toSqlDate(LocalDate localDate) {
-		return toSqlDate(localDate.toDate());
-	}
-
-	protected java.sql.Date toSqlDate(long time) {
-		return toSqlDate(new java.util.Date(time));
 	}
 
 	protected java.sql.Date toSqlDate(java.util.Date date) {
