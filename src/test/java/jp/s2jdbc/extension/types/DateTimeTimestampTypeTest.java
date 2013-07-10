@@ -140,7 +140,10 @@ public class DateTimeTimestampTypeTest {
 
 	private void assertGetValue(DateTime expected, Object actual) {
 		assertThat(actual, instanceOf(DateTime.class));
-		assertThat(((DateTime) actual).toDateTime(DateTimeZone.UTC),
-				is(expected.toDateTime(DateTimeZone.UTC)));
+		assertThat(((DateTime) actual).getMillis(), is(expected.getMillis()));
+		// 同じタイムゾーンで比較
+		DateTimeZone dateTimeZone = DateTimeZone.getDefault();
+		assertThat(((DateTime) actual).toDateTime(dateTimeZone),
+				is(expected.toDateTime(dateTimeZone)));
 	}
 }

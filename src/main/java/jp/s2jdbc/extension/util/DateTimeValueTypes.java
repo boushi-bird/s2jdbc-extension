@@ -4,10 +4,12 @@ import javax.persistence.TemporalType;
 
 import jp.s2jdbc.extension.types.DateTimeTimestampType;
 import jp.s2jdbc.extension.types.LocalDateSqlDateType;
+import jp.s2jdbc.extension.types.LocalDateTimeTimestampType;
 import jp.s2jdbc.extension.types.LocalTimeTimeType;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
@@ -20,6 +22,7 @@ import org.seasar.extension.jdbc.ValueType;
  */
 public class DateTimeValueTypes {
 	public static final ValueType DATETIME_TIMESTAMP = new DateTimeTimestampType();
+	public static final ValueType LOCALDATETIME_TIMESTAMP = new LocalDateTimeTimestampType();
 	public static final ValueType LOCALDATE_SQLDATE = new LocalDateSqlDateType();
 	public static final ValueType LOCALTIME_TIME = new LocalTimeTimeType();
 
@@ -64,25 +67,24 @@ public class DateTimeValueTypes {
 				return DATETIME_TIMESTAMP;
 			}
 		}
-		// // TODO LocalDateTime <-> java.sql.Timestamp
-		// // TODO LocalDateTime <-> java.sql.Date
-		// // TODO LocalDateTime <-> java.sql.Time
-		// if (LocalDateTime.class == clazz) {
-		// if (temporalType != null) {
-		// switch (temporalType) {
-		// case TIMESTAMP:
-		// return LOCALDATETIME_TIMESTAMP;
-		// case DATE:
-		// return LOCALDATETIME_SQLDATE;
-		// case TIME:
-		// return LOCALDATETIME_TIME;
-		// default:
-		// return LOCALDATETIME_TIMESTAMP;
-		// }
-		// } else {
-		// return LOCALDATETIME_TIMESTAMP;
-		// }
-		// }
+		if (LocalDateTime.class == clazz) {
+			if (temporalType != null) {
+				switch (temporalType) {
+				case TIMESTAMP:
+					return LOCALDATETIME_TIMESTAMP;
+					// // TODO LocalDateTime <-> java.sql.Date
+					// case DATE:
+					// return LOCALDATETIME_SQLDATE;
+					// // TODO LocalDateTime <-> java.sql.Time
+					// case TIME:
+					// return LOCALDATETIME_TIME;
+				default:
+					return LOCALDATETIME_TIMESTAMP;
+				}
+			} else {
+				return LOCALDATETIME_TIMESTAMP;
+			}
+		}
 		// // TODO DateMidnight <-> java.sql.Date
 		// if (DateMidnight.class == clazz) {
 		// return DATEMIDNIGHT_SQLDATE;
