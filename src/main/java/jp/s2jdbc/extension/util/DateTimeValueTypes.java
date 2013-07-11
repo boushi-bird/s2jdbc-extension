@@ -54,10 +54,10 @@ public class DateTimeValueTypes {
 				switch (temporalType) {
 				case TIMESTAMP:
 					return DATETIME_TIMESTAMP;
-					// // TODO DateTime <-> java.sql.Date
+					// // FIXME DateTime <-> java.sql.Date
 					// case DATE:
 					// return DATETIME_SQLDATE;
-					// // TODO DateTime <-> java.sql.Time
+					// // FIXME DateTime <-> java.sql.Time
 					// case TIME:
 					// return DATETIME_TIME;
 				default:
@@ -72,10 +72,10 @@ public class DateTimeValueTypes {
 				switch (temporalType) {
 				case TIMESTAMP:
 					return LOCALDATETIME_TIMESTAMP;
-					// // TODO LocalDateTime <-> java.sql.Date
+					// // FIXME LocalDateTime <-> java.sql.Date
 					// case DATE:
 					// return LOCALDATETIME_SQLDATE;
-					// // TODO LocalDateTime <-> java.sql.Time
+					// // FIXME LocalDateTime <-> java.sql.Time
 					// case TIME:
 					// return LOCALDATETIME_TIME;
 				default:
@@ -85,7 +85,7 @@ public class DateTimeValueTypes {
 				return LOCALDATETIME_TIMESTAMP;
 			}
 		}
-		// // TODO DateMidnight <-> java.sql.Date
+		// // FIXME DateMidnight <-> java.sql.Date
 		// if (DateMidnight.class == clazz) {
 		// return DATEMIDNIGHT_SQLDATE;
 		// }
